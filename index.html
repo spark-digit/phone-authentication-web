@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <title>Document</title>
+  </head>
+  <body style="padding: 20px; align-content: center;">
+    
+    <!-- Add two inputs for "phoneNumber" and "code" -->
+    <div id="phone">
+    <input type="tel" class="form-control" id="phoneNumber" /><br>
+    <button id="sign-in-button" class="btn btn-primary" onclick="submitPhoneNumberAuth()">
+      SIGN IN WITH PHONE
+    </button>
+    </div>
+    <br><br>
+
+    <div id="code" style="display: none;">
+    <input type="text" class="form-control" id="code" /><br>
+    <!-- Add two buttons to submit the inputs -->
+    <button id="confirm-code" class="btn btn-primary" onclick="submitPhoneNumberAuthCode()"> 
+      ENTER CODE
+    </button>
+    </div>
+    <!-- Add a container for reCaptcha -->
+    <div id="recaptcha-container"></div>
+
+    <!-- Add the latest firebase dependecies from CDN -->
+    <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-auth.js"></script>
+
+    <script>
+      // Paste the config your copied earlier
+      var firebaseConfig = {
+        apiKey: "AIzaSyAi7f9ABFvwP2dKDH8PkQZR88x7Gt7JXWg",
+        authDomain: "sparkdigit-88181.firebaseapp.com",
+        databaseURL: "https://sparkdigit-88181.firebaseio.com",
+        projectId: "sparkdigit-88181",
+        storageBucket: "",
+        messagingSenderId: "6138904308",
+        appId: "1:6138904308:web:72988a9b8174a0e76328a1",
+        measurementId: "G-JT380W30SR"
+      };
+      firebase.initializeApp(firebaseConfig);
+
+      // Create a Recaptcha verifier instance globally
+      // Calls submitPhoneNumberAuth() when the captcha is verified
+      window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+        "recaptcha-container",
+        {
+          size: "normal",
+          callback: function(response) {
+           
+            // submitPhoneNumberAuth();
+          }
+        }
+      );
+
+      // This function runs when the 'sign-in-button' is clicked
+      // Takes the value from the 'phoneNumber' input and sends SMS to that phone number
+      function submitPhoneNumberAuth() {
+        var phoneNumber = document.getElementById("phoneNumber").value;
+        var appVerifier = window.recaptchaVerifier;
+        firebase
+          .auth()
+          .signInWithPhoneNumber(phoneNumber, appVerifier)
+          .then(function(confirmationResult) { 
+            $('#recaptcha-container').css("display", "none");
+            $('#phone').css("display", "none");
+            $('#code').css("display", "block");
+            console.log('hiii');
+            // window.confirmationResult = confirmationResult;
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+      }
+
+      // This function runs when the 'confirm-code' button is clicked
+      // Takes the value from the 'code' input and submits the code to verify the phone number
+      // Return a user object if the authentication was successful, and auth is complete
+      function submitPhoneNumberAuthCode() {
+        var code = document.getElementById("code").value;
+        confirmationResult
+          .confirm(code)
+          .then(function(result) {
+            var user = result.user;
+            console.log(user);
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+      }
+
+      //This function runs everytime the auth state changes. Use to verify if the user is logged in
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          console.log("USER LOGGED IN");
+        } else {
+          // No user is signed in.
+          console.log("USER NOT LOGGED IN");
+        }
+      });
+    </script>
+  </body>
+</html>
