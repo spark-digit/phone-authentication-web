@@ -9,6 +9,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
+    
+    <!-- <script src="recaptcha__en.js"></script> -->
     <title>Document</title>
   </head>
   <body style="padding: 20px; align-content: center;">
@@ -17,12 +19,12 @@
     <div id="phone">
     <input type="tel" class="form-control" id="phoneNumber" /><br>
     <button id="sign-in-button" class="btn btn-primary" onclick="submitPhoneNumberAuth()">
-      SIGN IN WITH PHONE
+      SIGN IN WITH PHONE No
     </button>
     </div>
     <br><br>
 
-    <div id="code" style="display: none;">
+    <div id="code1" style="display: none;">
     <input type="text" class="form-control" id="code" /><br>
     <!-- Add two buttons to submit the inputs -->
     <button id="confirm-code" class="btn btn-primary" onclick="submitPhoneNumberAuthCode()"> 
@@ -39,14 +41,13 @@
     <script>
       // Paste the config your copied earlier
       var firebaseConfig = {
-        apiKey: "AIzaSyAi7f9ABFvwP2dKDH8PkQZR88x7Gt7JXWg",
-        authDomain: "sparkdigit-88181.firebaseapp.com",
-        databaseURL: "https://sparkdigit-88181.firebaseio.com",
-        projectId: "sparkdigit-88181",
-        storageBucket: "",
-        messagingSenderId: "6138904308",
-        appId: "1:6138904308:web:72988a9b8174a0e76328a1",
-        measurementId: "G-JT380W30SR"
+        apiKey: "AIzaSyDQkSaeY5MO5xyTlXG9D1vcGazuNj0kTZc",
+        authDomain: "moodindigo.firebaseapp.com",
+        databaseURL: "https://moodindigo.firebaseio.com",
+        projectId: "moodindigo",
+        storageBucket: "moodindigo.appspot.com",
+        messagingSenderId: "511498944970",
+        appId: "1:511498944970:web:774fe5147bcfd244a5cf33"
       };
       firebase.initializeApp(firebaseConfig);
 
@@ -74,9 +75,9 @@
           .then(function(confirmationResult) { 
             $('#recaptcha-container').css("display", "none");
             $('#phone').css("display", "none");
-            $('#code').css("display", "block");
+            $('#code1').css("display", "block");
             console.log('hiii');
-            // window.confirmationResult = confirmationResult;
+            window.confirmationResult = confirmationResult;
           })
           .catch(function(error) {
             console.log(error);
@@ -92,10 +93,10 @@
           .confirm(code)
           .then(function(result) {
             var user = result.user;
-            console.log(user);
+            console.log("auth-done");
           })
           .catch(function(error) {
-            console.log(error);
+            console.log("auth-error");
           });
       }
 
